@@ -123,12 +123,6 @@ class Encoder(nn.Module):
                          }
 
     def forward(self, x, x_name, x_xyz_min):
-        '''
-        :param x: 输入点云support [n_way * k_shot, 9, 2048] <=> [B, C, N] and default C = [x,y,z,r,g,b,X,Y,Z]， 或者query [num_query, 9, 2048]
-        :param x_name: 对应namelist，长度为 n * k
-        :param x_xyz_min: 每个点云block对应的block原空间 xyz 最小坐标 [n * k, 3]
-        :return: encoded 的特征
-        '''
         local_feat = self.getLocalFeature(x)# (B, 192, N)
 
         # ====== step1: encode global features =====  selected_features, selected_es
@@ -173,14 +167,13 @@ class Encoder(nn.Module):
         XYZ = augment_pointcloud(XYZ, self.pc_augm_config)
 
         ptcloud = []
-        if 'xyz' in pc_attribs: ptcloud.append(xyz)  # 原始坐标
-        if 'rgb' in pc_attribs: ptcloud.append(rgb)  # 归一化 RGB
-        if 'XYZ' in pc_attribs: ptcloud.append(XYZ)  # 归一化 XYZ
+        if 'xyz' in pc_attribs: ptcloud.append(xyz)  
+        if 'rgb' in pc_attribs: ptcloud.append(rgb)  
+        if 'XYZ' in pc_attribs: ptcloud.append(XYZ)  
 
-        # 将所有特征拼接，变为 (1024, 9)
         ptcloud = np.concatenate(ptcloud, axis=1)
-        ptcloud = np.transpose(ptcloud)  # 变为 (9, 1024)
-        # ptcloud = np.expand_dims(ptcloud, axis=0)  # 批次维度变为 (1, 9, 1024)
+        ptcloud = np.transpose(ptcloud)  
+        # ptcloud = np.expand_dims(ptcloud, axis=0)  
 
         pc_tensor = torch.tensor(ptcloud).float().to('cuda')
 
