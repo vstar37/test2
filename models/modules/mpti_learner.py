@@ -36,19 +36,11 @@ class MPTILearner(object):
 
 
     def train(self, data):
-        """
-        Args:
-            data: a list of torch tensors with the following entries.
-            - support_x: support point clouds with shape (n_way, k_shot, in_channels, num_points)
-            - support_y: support masks (foreground) with shape (n_way, k_shot, num_points), num_points是2048个布尔值，表示点是否属于n_way
-            - query_x: query point clouds with shape (n_queries, in_channels, num_points)
-            - query_y: query labels with shape (n_queries, num_points), n_queries 是查询场景的数量scenes，num_points是2048个整数，表示点的类别
-        """
+        
         [support_x, support_y, query_x, query_y, support_names, query_names, support_xyz_mins, query_xyz_mins] = data
 
         self.model.train()
 
-        # 前向传播，得到预测结果和各个损失项
         query_logits, loss = self.model(data)
 
         [bce, loss_p1, loss_p2] = loss
