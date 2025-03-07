@@ -1,8 +1,3 @@
-"""DGCNN as Backbone to extract point-level features
-   Adapted from https://github.com/WangYueFt/dgcnn/blob/master/pytorch/model.py
-   Author: Zhao Na, 2020
-"""
-
 import os
 import sys
 import copy
