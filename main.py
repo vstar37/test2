@@ -1,8 +1,3 @@
-"""Main function for this repo
-
-Author: Zhao Na, 2020
-
-"""
 import ast
 import argparse
 
@@ -104,11 +99,9 @@ if __name__ == '__main__':
     args.base_widths = ast.literal_eval(args.base_widths)
     args.pc_in_dim = len(args.pc_attribs)
 
-    # 根据 --n_iters 动态设置 --saved_iter 的默认值
-    if args.saved_iter is None:  # 如果用户没有指定 --saved_iter
+    if args.saved_iter is None:  
         args.saved_iter = args.n_iters // 10
 
-    # 训练 模型，利用DGCNN做特征提取
     # Start trainer for pre-train, proto-train, proto-eval, mpti-train, mpti-test
     if args.phase=='mptitrain':
         args.log_dir = args.save_path + 'log_mpti_%s_S%d_N%d_K%d' % (args.dataset, args.cvfold,
@@ -119,7 +112,6 @@ if __name__ == '__main__':
         args.log_dir = args.model_checkpoint_path
         from runs.eval import eval
         eval(args)
-    # 预训练的是 DGCNNSeg = DGCNN + SegHead，这部分只是让bb提取出的特征足以应付数据集中的各个类别。
     elif args.phase=='pretrain':
         args.log_dir = args.save_path + 'log_pretrain_%s_S%d' % (args.dataset, args.cvfold)
         from runs.pre_train import pretrain
